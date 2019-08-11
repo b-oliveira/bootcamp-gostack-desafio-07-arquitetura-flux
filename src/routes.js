@@ -1,6 +1,9 @@
+import React from 'react';
 import { createAppContainer, createStackNavigator } from 'react-navigation';
 
 import Main from './pages/Home';
+
+import Header from './components/Header';
 
 const Routes = createAppContainer(
   createStackNavigator(
@@ -8,13 +11,8 @@ const Routes = createAppContainer(
       Main,
     },
     {
-      headerLayoutPreset: 'center',
-      headerBackTitleVisible: false,
       defaultNavigationOptions: {
-        headerStyle: {
-          backgroundColor: '#191920',
-        },
-        headerTintColor: '#FFF',
+        header: <Header />,
       },
     }
   )
