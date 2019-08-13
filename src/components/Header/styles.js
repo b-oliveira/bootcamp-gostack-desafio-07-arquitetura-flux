@@ -30,11 +30,14 @@ export const CartButton = styled.TouchableOpacity`
 
 export const ItemCount = styled.Text`
   position: absolute;
-  align-self: flex-end;
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  font-size: 10px;
-  color: #fff;
+  text-align: center;
+  top: -9px;
+  right: -9px;
+  min-width: 18px;
+  min-height: 18px;
   background: #7159c1;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px;
+  border-radius: 9px;
 `;
