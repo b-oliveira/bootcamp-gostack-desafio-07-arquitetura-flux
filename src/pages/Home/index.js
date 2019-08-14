@@ -1,10 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { FlatList } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import * as CartActions from '../../store/modules/cart/actions';
+
 import api from '../../services/api';
+import { formatPrice } from '../../util/format';
 
 import {
   Container,
@@ -32,23 +36,21 @@ class Home extends React.Component {
 
     const data = response.data.map(product => ({
       ...product,
-      // priceFormatted: formatPrice(product.price),
+      priceFormatted: formatPrice(product.price),
     }));
 
     this.setState({ products: data });
   };
 
-  handleAddProduct = product => {
-    const { dispatch } = this.props;
+  handleAddProduct = id => {
+    const { addToCartRequest } = this.props;
 
-    dispatch({
-      type: 'ADD_TO_CART',
-      product,
-    });
+    addToCartRequest(id);
   };
 
   render() {
     const { products } = this.state;
+    const { amount } = this.props;
 
     return (
       <Container>
@@ -62,10 +64,10 @@ class Home extends React.Component {
               <ProductImage source={{ uri: item.image }} />
               <ProductTitle>{item.title}</ProductTitle>
               <ProductPrice>{item.price}</ProductPrice>
-              <AddButton onPress={() => this.handleAddProduct(item)}>
+              <AddButton onPress={() => this.handleAddProduct(item.id)}>
                 <ProductAmount>
                   <Icon name="add-shopping-cart" color="#FFF" size={20} />
-                  <ProductAmountText>{0}</ProductAmountText>
+                  <ProductAmountText>{amount[item.id] || 0}</ProductAmountText>
                 </ProductAmount>
                 <AddButtonText>ADICIONAR</AddButtonText>
               </AddButton>
@@ -77,4 +79,17 @@ class Home extends React.Component {
   }
 }
 
-export default connect()(Home);
+const mapStateToProps = state => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+    return amount;
+  }, {}),
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

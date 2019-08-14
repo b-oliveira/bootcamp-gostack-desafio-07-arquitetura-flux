@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import * as CartActions from '../../store/modules/cart/reducer';
+import * as CartActions from '../../store/modules/cart/actions';
+import { formatPrice } from '../../util/format';
 
 import {
   Container,
@@ -97,12 +98,14 @@ function Cart({
 const mapStateToProps = state => ({
   products: state.cart.map(product => ({
     ...product,
-    subtotal: product.price * product.amount,
-    priceFormatted: product.price,
+    subtotal: formatPrice(product.price * product.amount),
+    priceFormatted: formatPrice(product.price),
   })),
-  total: state.cart.reduce(
-    (total, product) => total + product.price * product.amount,
-    0
+  total: formatPrice(
+    state.cart.reduce(
+      (total, product) => total + product.price * product.amount,
+      0
+    )
   ),
 });
 
