@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { FlatList } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import FlashMessage from 'react-native-flash-message';
 import * as CartActions from '../../store/modules/cart/actions';
 
 import api from '../../services/api';
@@ -53,28 +53,33 @@ class Home extends React.Component {
     const { amount } = this.props;
 
     return (
-      <Container>
-        <FlatList
-          horizontal
-          data={products}
-          extraData={this.props}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Product key={item.id}>
-              <ProductImage source={{ uri: item.image }} />
-              <ProductTitle>{item.title}</ProductTitle>
-              <ProductPrice>{item.price}</ProductPrice>
-              <AddButton onPress={() => this.handleAddProduct(item.id)}>
-                <ProductAmount>
-                  <Icon name="add-shopping-cart" color="#FFF" size={20} />
-                  <ProductAmountText>{amount[item.id] || 0}</ProductAmountText>
-                </ProductAmount>
-                <AddButtonText>ADICIONAR</AddButtonText>
-              </AddButton>
-            </Product>
-          )}
-        />
-      </Container>
+      <>
+        <FlashMessage position="bottom" />
+        <Container>
+          <FlatList
+            horizontal
+            data={products}
+            extraData={this.props}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <Product key={item.id}>
+                <ProductImage source={{ uri: item.image }} />
+                <ProductTitle>{item.title}</ProductTitle>
+                <ProductPrice>{item.priceFormatted}</ProductPrice>
+                <AddButton onPress={() => this.handleAddProduct(item.id)}>
+                  <ProductAmount>
+                    <Icon name="add-shopping-cart" color="#FFF" size={20} />
+                    <ProductAmountText>
+                      {amount[item.id] || 0}
+                    </ProductAmountText>
+                  </ProductAmount>
+                  <AddButtonText>ADICIONAR</AddButtonText>
+                </AddButton>
+              </Product>
+            )}
+          />
+        </Container>
+      </>
     );
   }
 }

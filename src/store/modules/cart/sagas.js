@@ -1,5 +1,5 @@
-import { Alert } from 'react-native';
 import { call, put, all, select, takeLatest } from 'redux-saga/effects';
+import { showMessage } from 'react-native-flash-message';
 import NavigationService from '../../../services/navigation';
 
 import api from '../../../services/api';
@@ -19,7 +19,10 @@ function* addToCart({ id }) {
   const amount = currentAmount + 1;
 
   if (amount > stockAmount) {
-    Alert.alert('Quantidade solicitada fora de estoque');
+    showMessage({
+      message: 'Não há mais quantidade disponível!',
+      type: 'danger',
+    });
     return;
   }
 
@@ -47,7 +50,10 @@ function* updateAmount({ id, amount }) {
   const stockAmount = stock.data.amount;
 
   if (amount > stockAmount) {
-    Alert.alert('Quantidade solicitada fora de estoque');
+    showMessage({
+      message: 'Não há mais quantidade disponível!',
+      type: 'danger',
+    });
     return;
   }
 
